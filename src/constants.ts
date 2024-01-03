@@ -2,8 +2,8 @@ import { PublicKey } from "@solana/web3.js";
 
 const MAGICEDEN_URL = "https://magiceden.io";
 const MAGICEDEN_BASE_API_URL = "https://api-mainnet.magiceden.io";
-const MAGICEDEN_NOTARY_HOST = "wk-notary-prod.magiceden.io";
 const MAGICEDEN_MINTIX_URL = "https://wk-notary-prod.magiceden.io/mintix";
+const MAGICEDEN_NOTARY_HOST = "wk-notary-prod.magiceden.io";
 
 const DEFAULT_DERIVATION_PATH = "m/44'/501'/0'/0'";
 

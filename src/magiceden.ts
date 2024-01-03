@@ -1,4 +1,4 @@
-import { CurlImpersonate } from "./helpers";
+import { CurlImpersonate, Logger } from "./helpers";
 import {
   MAGICEDEN_BASE_API_URL,
   MAGICEDEN_MINTIX_URL,
@@ -15,6 +15,7 @@ import {
 
 export class Magiceden {
   public readonly collection: CollectionDetails;
+  private readonly logger = new Logger(__filename);
 
   private constructor(collection?: CollectionDetails) {
     this.collection = collection!;
@@ -30,20 +31,26 @@ export class Magiceden {
     params: MintixParams,
   ): Promise<MintixResponse> {
     const curl = new CurlImpersonate();
-    const response = await curl.post(
-      MAGICEDEN_MINTIX_URL,
-      {
-        params: params,
-        accounts: accounts,
-      },
-      {
-        authority: MAGICEDEN_NOTARY_HOST,
-        origin: MAGICEDEN_URL,
-        referer: MAGICEDEN_URL,
-      },
-    );
+    this.logger.info("Sending mintix request to MagicEden...");
 
-    return JSON.parse(response);
+    try {
+      const response = await curl.post(
+        MAGICEDEN_MINTIX_URL,
+        {
+          params: params,
+          accounts: accounts,
+        },
+        {
+          authority: MAGICEDEN_NOTARY_HOST,
+          origin: MAGICEDEN_URL,
+          referer: MAGICEDEN_URL,
+        },
+      );
+      return JSON.parse(response);
+    } catch (e) {
+      this.logger.error("Failed to send mintix request to MagicEden", e);
+      throw e;
+    }
   }
 
   private static async getCollectionDetails(

@@ -10,11 +10,14 @@ import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 import MintAssistant from "./mint-assistant";
+import { Logger } from "../helpers";
 import { TOKEN_METADATA_PROGRAM_ID } from "../constants";
 import { MintixAccounts, MintixParams, MintParams } from "../types";
 import { Magiceden } from "../magiceden";
 
 export default class Mint extends MintAssistant {
+  private readonly logger = new Logger(__filename);
+
   private constructor(params: MintParams) {
     super(params);
   }
@@ -29,6 +32,8 @@ export default class Mint extends MintAssistant {
   }
 
   public async createTransaction(magiceden: Magiceden): Promise<Transaction> {
+    this.logger.info("Creating transaction...");
+
     const [accounts, params] = await Promise.all([
       this.generateAccounts(),
       this.generateParams(),
@@ -39,16 +44,34 @@ export default class Mint extends MintAssistant {
   }
 
   public signTransaction(transaction: Transaction): Transaction {
-    transaction.partialSign(this.payerKeyPair);
-    transaction.partialSign(this.mintKeyPair);
-    return transaction;
+    this.logger.info("Signing transaction...");
+
+    try {
+      transaction.partialSign(this.payerKeyPair);
+      transaction.partialSign(this.mintKeyPair);
+      return transaction;
+    } catch (e) {
+      this.logger.error("Failed to sign transaction", e);
+      throw e;
+    }
   }
 
   public async sendTransaction(transaction: Transaction): Promise<string> {
-    const sendTx = transaction.serialize({ verifySignatures: true });
-    return this.candyMachine.connection.sendRawTransaction(sendTx, {
-      preflightCommitment: "processed",
-    });
+    if (process.env.NODE_ENV === "production") {
+      this.logger.info("Sending transaction...");
+      try {
+        const sendTx = transaction.serialize({ verifySignatures: true });
+        return this.candyMachine.connection.sendRawTransaction(sendTx, {
+          preflightCommitment: "processed",
+        });
+      } catch (e) {
+        this.logger.error("Failed to send transaction", e);
+        throw e;
+      }
+    } else {
+      this.logger.info("Skipping sending transaction in dev mode");
+      return "-";
+    }
   }
 
   private async generateParams(): Promise<MintixParams> {

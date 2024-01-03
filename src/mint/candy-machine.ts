@@ -7,10 +7,12 @@ import {
 } from "@solana/web3.js";
 import { AnchorProvider, Wallet, Program } from "@coral-xyz/anchor";
 import { CandyMachineState } from "../types";
+import { Logger } from "../helpers";
 import { CANDY_MACHINE_PROGRAM_V1 } from "../constants";
 
 export class CandyMachine {
   private readonly provider: AnchorProvider;
+  private readonly logger = new Logger(__filename);
 
   constructor(keypair: Keypair) {
     const connection = new Connection(
@@ -38,6 +40,10 @@ export class CandyMachine {
     const itemsAvailable = +state.itemsAvailable!;
     const itemsRedeemed = +state.itemsRedeemedNormal!;
     const itemsRemaining = itemsAvailable - itemsRedeemed;
+
+    this.logger.info(
+      `Found candy machine "${candyMachineId}" with ${itemsRemaining} items available`,
+    );
 
     return {
       id: candyMachineId,

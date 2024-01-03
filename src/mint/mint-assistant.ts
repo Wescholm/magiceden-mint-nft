@@ -53,6 +53,7 @@ export default class MintAssistant {
   protected async getLatestBlockhash(): Promise<BlockhashWithExpiryBlockHeight> {
     return this.candyMachine.connection.getLatestBlockhash("finalized");
   }
+
   protected get launchStagesInfoPubKey(): PublicKey {
     const [launchStagesInfo, launchStagesBump] =
       anchor.web3.PublicKey.findProgramAddressSync(

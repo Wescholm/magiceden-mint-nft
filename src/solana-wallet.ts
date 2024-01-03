@@ -13,10 +13,9 @@ export default class SolanaWallet {
   private readonly DERIVATION_PATH: string;
   public readonly keypair: Keypair;
   private readonly connection: Connection;
-  private readonly logger: Logger;
+  private readonly logger = new Logger(__filename);
 
   constructor(mnemonic: string, DERIVATION_PATH?: string) {
-    this.logger = new Logger(__filename);
     this.DERIVATION_PATH = DERIVATION_PATH || DEFAULT_DERIVATION_PATH;
 
     this.keypair = this.recoverFromMnemonic(mnemonic);

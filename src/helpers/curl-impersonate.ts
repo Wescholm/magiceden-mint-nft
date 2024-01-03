@@ -1,13 +1,18 @@
 import { exec } from "child_process";
+import { Logger } from "./logger";
 
 export class CurlImpersonate {
   private readonly proxyString: string;
+  private readonly logger = new Logger(__filename);
+
   constructor(proxy?: string) {
     this.proxyString = proxy ? `-x "${proxy}"` : "";
   }
 
   private executeCommand(command: string): Promise<string> {
     return new Promise((resolve, reject) => {
+      this.logger.info(`Executing command: ${command}`);
+
       exec(command, (error, stdout, stderr) => {
         if (error) {
           reject({ error: true, message: error.message });
