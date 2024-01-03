@@ -7,10 +7,11 @@ export class Logger {
   constructor(name: string) {
     this.logger = pino({
       name: path.basename(name),
-      level: process.env.LOG_LEVEL,
+      level: process.env.LOG_LEVEL || "info",
       transport: {
         target: "pino-pretty",
         options: {
+          ignore: "pid",
           colorize: true,
         },
       },
@@ -25,8 +26,8 @@ export class Logger {
     this.logger.warn(msg);
   }
 
-  debug(message: string) {
-    this.logger.debug(message);
+  debug(message: string, ...args: string[]) {
+    this.logger.debug(message.concat(...args));
   }
 
   error(msg: string, err: any) {

@@ -11,9 +11,16 @@ export class CurlImpersonate {
 
   private executeCommand(command: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      this.logger.info(`Executing command: ${command}`);
+      this.logger.debug(`Executing command: ${command}\n`);
 
       exec(command, (error, stdout, stderr) => {
+        this.logger.debug(
+          "Command output: ",
+          stdout
+            .substring(0, 999)
+            .concat(stdout.length > 999 ? "..." : "", "\n"),
+        );
+
         if (error) {
           reject({ error: true, message: error.message });
           return;

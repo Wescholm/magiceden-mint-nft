@@ -35,7 +35,6 @@ export default class SolanaWallet {
   }
 
   public recoverFromMnemonic(mnemonic: string): Keypair {
-    this.logger.debug(`Recovering keypair from mnemonic: ${mnemonic}`);
     try {
       const seed = mnemonicToSeedSync(mnemonic, "");
       const hd = HDKey.fromMasterSeed(seed.toString("hex"));

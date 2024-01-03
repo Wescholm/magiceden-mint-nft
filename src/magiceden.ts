@@ -31,8 +31,6 @@ export class Magiceden {
     params: MintixParams,
   ): Promise<MintixResponse> {
     const curl = new CurlImpersonate();
-    this.logger.info("Sending mintix request to MagicEden...");
-
     try {
       const response = await curl.post(
         MAGICEDEN_MINTIX_URL,

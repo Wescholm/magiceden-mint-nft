@@ -19,6 +19,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY ./src ./src
-COPY main.ts .
 COPY tsconfig.json .
+COPY .env .
+
 CMD ["npm", "start"]
