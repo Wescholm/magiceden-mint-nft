@@ -2,7 +2,7 @@
   "name": "magiceden",
   "version": "1.0.0",
   "scripts": {
-    "start": "ts-node main.ts"
+    "start": "ts-node src/main.ts"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.29.0",
@@ -11,7 +11,9 @@
     "axios": "^1.6.3",
     "bip39": "^3.1.0",
     "bs58": "^5.0.0",
-    "micro-ed25519-hdkey": "^0.1.2"
+    "micro-ed25519-hdkey": "^0.1.2",
+    "pino": "^8.17.2",
+    "pino-pretty": "^10.3.1"
   },
   "devDependencies": {
     "@types/node": "^20.10.6",

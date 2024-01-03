@@ -5,6 +5,8 @@ const MAGICEDEN_BASE_API_URL = "https://api-mainnet.magiceden.io";
 const MAGICEDEN_NOTARY_HOST = "wk-notary-prod.magiceden.io";
 const MAGICEDEN_MINTIX_URL = "https://wk-notary-prod.magiceden.io/mintix";
 
+const DEFAULT_DERIVATION_PATH = "m/44'/501'/0'/0'";
+
 const CANDY_MACHINE_PROGRAM_V1 = new PublicKey(
   "CMZYPASGWeTz7RNGHaRJfCq2XQ5pYK6nDvVQxzkH51zb",
 );
@@ -14,6 +16,7 @@ const TOKEN_METADATA_PROGRAM_ID = new PublicKey(
 );
 
 export {
+  DEFAULT_DERIVATION_PATH,
   CANDY_MACHINE_PROGRAM_V1,
   TOKEN_METADATA_PROGRAM_ID,
   MAGICEDEN_URL,
