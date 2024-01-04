@@ -2,12 +2,13 @@
   "name": "magiceden",
   "version": "1.0.0",
   "scripts": {
-    "start": "ts-node src/main.ts",
-    "webpack": "npx webpack",
-    "build": "docker build --no-cache -t magiceden-mint .",
-    "run": "docker run -p 3000:3000 magiceden-mint",
-    "build:dev": "webpack --mode=development",
-    "build:prod": "webpack --mode=production --node-env=production"
+    "start:ts": "ts-node src/main.ts",
+    "start:dev": "docker run magiceden-mint-nft:development",
+    "start:prod": "docker run magiceden-mint-nft:production",
+    "docker:build:dev": "make dev",
+    "docker:build:prod": "make prod",
+    "webpack:build:dev": "webpack --mode=development",
+    "webpack:build:prod": "webpack --mode=production"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.29.0",
