@@ -1,21 +1,23 @@
 import path from "path";
 import pino from "pino";
+import pretty from "pino-pretty";
 
 export class Logger {
   private readonly logger: pino.Logger;
 
   constructor(name: string) {
-    this.logger = pino({
-      name: path.basename(name),
-      level: process.env.LOG_LEVEL || "info",
-      transport: {
-        target: "pino-pretty",
-        options: {
-          ignore: "pid",
-          colorize: true,
-        },
-      },
+    const stream = pretty({
+      colorize: true,
+      ignore: "pid",
     });
+
+    this.logger = pino(
+      {
+        name: path.basename(name),
+        level: process.env.LOG_LEVEL || "info",
+      },
+      stream,
+    );
   }
 
   info(msg: string) {

@@ -1,13 +1,19 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "lib": ["dom", "esnext"],
+    "target": "es2022",
+    "lib": ["es2022", "esnext"],
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "declaration": true,
     "strict": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "typeRoots": ["./node_modules/@types"]
+    "allowJs": true,
+    "sourceMap": true,
+    "declarationMap": true,
+    "declarationDir": "dist",
+    "outDir": "dist"
   }
 }

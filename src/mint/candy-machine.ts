@@ -5,7 +5,9 @@ import {
   SystemProgram,
   clusterApiUrl,
 } from "@solana/web3.js";
-import { AnchorProvider, Wallet, Program } from "@coral-xyz/anchor";
+import { AnchorProvider, Program } from "@coral-xyz/anchor";
+import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
+
 import { CandyMachineState } from "../types";
 import { Logger } from "../helpers";
 import { CANDY_MACHINE_PROGRAM_V1 } from "../constants";
@@ -19,7 +21,7 @@ export class CandyMachine {
       clusterApiUrl("mainnet-beta"),
       "confirmed",
     );
-    this.provider = new AnchorProvider(connection, new Wallet(keypair), {
+    this.provider = new AnchorProvider(connection, new NodeWallet(keypair), {
       preflightCommitment: "recent",
     });
   }

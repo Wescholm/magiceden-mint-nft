@@ -22,6 +22,7 @@ export class CurlImpersonate {
         );
 
         if (error) {
+          this.logger.error("Command error: ", error);
           reject({ error: true, message: error.message });
           return;
         }

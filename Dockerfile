@@ -18,7 +18,13 @@ RUN npm install
 COPY ./src ./src
 COPY tsconfig.json .
 COPY .env .
+COPY webpack.config.ts .
+
+# Building & removing source code
+RUN npm run build:dev
+RUN rm -rf ./node_modules
+RUN rm -rf ./src
 
 # Running
 ENV CURL_PROCESS=curl_chrome110
-CMD ["npm", "start"]
+CMD ["node", "dist/main.js"]
