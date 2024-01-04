@@ -1,23 +1,17 @@
-import "dotenv/config";
 import SolanaWallet from "./solana-wallet";
 import Mint from "./mint";
 import { Logger } from "./helpers";
 
+const MNEMONIC = process.env.MNEMONIC as string;
+const COLLECTION_SYMBOL = process.env.COLLECTION_SYMBOL as string;
 const logger = Logger.getInstance(__filename);
-declare var process: {
-  exit(code?: number): never;
-  env: {
-    MNEMONIC: string;
-    COLLECTION_SYMBOL: string;
-  };
-};
 
 const mintNFT = async () => {
-  const wallet = new SolanaWallet(process.env.MNEMONIC);
+  const wallet = new SolanaWallet(MNEMONIC);
 
   const mint = await Mint.init({
     keypair: wallet.keypair,
-    symbol: process.env.COLLECTION_SYMBOL,
+    symbol: COLLECTION_SYMBOL,
   });
 
   try {
@@ -35,6 +29,8 @@ const mintNFT = async () => {
     });
     process.exit(1);
   }
+
+  process.exit(0);
 };
 
 mintNFT();
