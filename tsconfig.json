@@ -5,15 +5,12 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "declaration": true,
     "strict": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "allowJs": true,
     "sourceMap": true,
-    "declarationMap": true,
-    "declarationDir": "dist",
     "outDir": "dist"
   }
 }
