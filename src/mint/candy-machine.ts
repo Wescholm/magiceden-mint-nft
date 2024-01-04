@@ -14,7 +14,7 @@ import { CANDY_MACHINE_PROGRAM_V1 } from "../constants";
 
 export class CandyMachine {
   private readonly provider: AnchorProvider;
-  private readonly logger = new Logger(__filename);
+  private readonly logger = Logger.getInstance(__filename);
 
   constructor(keypair: Keypair) {
     const connection = new Connection(
@@ -43,9 +43,11 @@ export class CandyMachine {
     const itemsRedeemed = +state.itemsRedeemedNormal!;
     const itemsRemaining = itemsAvailable - itemsRedeemed;
 
-    this.logger.info(
-      `Found candy machine "${candyMachineId}" with ${itemsRemaining} items available`,
-    );
+    this.logger.info({
+      msg: `Found candy machine "${candyMachineId}" with ${itemsRemaining} items available`,
+      candyMachineId,
+      itemsRemaining,
+    });
 
     return {
       id: candyMachineId,

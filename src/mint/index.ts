@@ -16,7 +16,7 @@ import { MintixAccounts, MintixParams, MintParams } from "../types";
 import { Magiceden } from "../magiceden";
 
 export default class Mint extends MintAssistant {
-  private readonly logger = new Logger(__filename);
+  private readonly logger = Logger.getInstance(__filename);
 
   private constructor(params: MintParams) {
     super(params);

@@ -1,42 +1,54 @@
+import fs from "fs";
 import path from "path";
-import pino from "pino";
+import pino, { StreamEntry } from "pino";
 import pretty from "pino-pretty";
 
 export class Logger {
+  private BASE_LOGS_PATH = path.resolve(__dirname, "..", "logs");
+  private static instance: Logger;
   private readonly logger: pino.Logger;
+  private readonly streams: StreamEntry[] = [
+    {
+      stream: fs.createWriteStream(
+        path.resolve(this.BASE_LOGS_PATH, "info.stream.out"),
+      ),
+    },
+    {
+      stream: pretty({
+        colorize: true,
+        hideObject: true,
+        messageKey: "msg",
+        errorProps: "e,err,error",
+      }),
+    },
+    {
+      level: "debug",
+      stream: fs.createWriteStream(
+        path.resolve(this.BASE_LOGS_PATH, "debug.stream.out"),
+      ),
+    },
+    {
+      level: "trace",
+      stream: fs.createWriteStream(
+        path.resolve(this.BASE_LOGS_PATH, "trace.stream.out"),
+      ),
+    },
+  ];
 
-  constructor(name: string) {
-    const stream = pretty({
-      colorize: true,
-      ignore: "pid",
-    });
-
-    this.logger = pino(
-      {
-        name: path.basename(name),
-        level: process.env.LOG_LEVEL || "info",
-      },
-      stream,
-    );
+  private constructor(childLogger?: any) {
+    this.logger =
+      childLogger ?? pino({ level: "trace" }, pino.multistream(this.streams));
   }
 
-  info(msg: string) {
-    this.logger.info(msg);
+  static getInstance(filePath: string): pino.Logger {
+    const fileName = path.basename(filePath);
+    if (!Logger.instance) {
+      Logger.instance = new Logger();
+    }
+    return Logger.instance.createChildLogger(fileName);
   }
 
-  warn(msg: string) {
-    this.logger.warn(msg);
-  }
-
-  debug(message: string, ...args: string[]) {
-    this.logger.debug(message.concat(...args));
-  }
-
-  error(msg: string, err: any) {
-    this.logger.error({ msg, err });
-  }
-
-  fatal(msg: string, err: any) {
-    this.logger.fatal({ msg, err });
+  public createChildLogger(module: string): pino.Logger {
+    return this.logger.child({ module });
   }
 }

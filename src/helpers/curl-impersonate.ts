@@ -3,7 +3,7 @@ import { Logger } from "./logger";
 
 export class CurlImpersonate {
   private readonly proxyString: string;
-  private readonly logger = new Logger(__filename);
+  private readonly logger = Logger.getInstance(__filename);
 
   constructor(proxy?: string) {
     this.proxyString = proxy ? `-x "${proxy}"` : "";
@@ -11,23 +11,23 @@ export class CurlImpersonate {
 
   private executeCommand(command: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      this.logger.debug(`Executing command: ${command}\n`);
+      this.logger.trace({
+        msg: "Executing command",
+        command,
+      });
 
       exec(command, (error, stdout, stderr) => {
-        this.logger.debug(
-          "Command output: ",
-          stdout
-            .substring(0, 999)
-            .concat(stdout.length > 999 ? "..." : "", "\n"),
-        );
+        this.logger.trace({
+          msg: error ? "Command failed" : "Command executed",
+          command,
+          error,
+          stdout,
+          stderr,
+        });
 
-        if (error) {
-          this.logger.error("Command error: ", error);
-          reject({ error: true, message: error.message });
-          return;
-        }
-
-        resolve(stdout);
+        return error
+          ? reject({ error: true, message: error.message })
+          : resolve(stdout);
       });
     });
   }
@@ -45,7 +45,7 @@ export class CurlImpersonate {
   ): Promise<string> {
     const headerString = this.formatCurlParams(headers);
     const queryString = new URLSearchParams(queryParams).toString();
-    const command = `curl_chrome110 ${this.proxyString} ${headerString} "${url}?${queryString}"`;
+    const command = `${process.env.CURL_PROCESS} ${this.proxyString} ${headerString} "${url}?${queryString}"`;
 
     return this.executeCommand(command);
   }

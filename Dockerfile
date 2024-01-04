@@ -4,6 +4,7 @@ ARG NODE_VERSION=20.10.0
 ARG NODE_PACKAGE_URL=https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz
 
 WORKDIR /app
+RUN mkdir logs
 
 RUN apk add --no-cache curl libstdc++ \
     && curl -fsSL $NODE_PACKAGE_URL | tar -xJ -C /usr/local --strip-components=1 \

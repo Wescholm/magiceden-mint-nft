@@ -15,7 +15,7 @@ import {
 
 export class Magiceden {
   public readonly collection: CollectionDetails;
-  private readonly logger = new Logger(__filename);
+  private readonly logger = Logger.getInstance(__filename);
 
   private constructor(collection?: CollectionDetails) {
     this.collection = collection!;
@@ -45,9 +45,12 @@ export class Magiceden {
         },
       );
       return JSON.parse(response);
-    } catch (e) {
-      this.logger.error("Failed to send mintix request to MagicEden", e);
-      throw e;
+    } catch (error) {
+      this.logger.error({
+        msg: "Failed to send mintix request to MagicEden",
+        error,
+      });
+      throw error;
     }
   }
 

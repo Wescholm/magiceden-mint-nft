@@ -13,7 +13,7 @@ export default class SolanaWallet {
   private readonly DERIVATION_PATH: string;
   public readonly keypair: Keypair;
   private readonly connection: Connection;
-  private readonly logger = new Logger(__filename);
+  private readonly logger = Logger.getInstance(__filename);
 
   constructor(mnemonic: string, DERIVATION_PATH?: string) {
     this.DERIVATION_PATH = DERIVATION_PATH || DEFAULT_DERIVATION_PATH;
@@ -42,13 +42,17 @@ export default class SolanaWallet {
         hd.derive(this.DERIVATION_PATH).privateKey,
       );
 
-      this.logger.info(
-        `Recovered keypair from mnemonic. Address: ${keypair.publicKey.toString()}`,
-      );
+      this.logger.info({
+        msg: "Recovered keypair from mnemonic",
+        address: keypair.publicKey.toString(),
+      });
 
       return keypair;
     } catch (error) {
-      this.logger.fatal("Failed to recover keypair from mnemonic", error);
+      this.logger.fatal({
+        msg: "Failed to recover keypair from mnemonic",
+        error,
+      });
       process.exit(1);
     }
   }

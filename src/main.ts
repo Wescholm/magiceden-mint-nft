@@ -3,7 +3,7 @@ import SolanaWallet from "./solana-wallet";
 import Mint from "./mint";
 import { Logger } from "./helpers";
 
-const logger = new Logger(__filename);
+const logger = Logger.getInstance(__filename);
 declare var process: {
   exit(code?: number): never;
   env: {
@@ -24,9 +24,15 @@ const mintNFT = async () => {
     const transaction = await mint.createTransaction(mint.magiceden);
     const signedTransaction = mint.signTransaction(transaction);
     const txId = await mint.sendTransaction(signedTransaction);
-    logger.info(`Transaction successfully sent! TxId: ${txId}`);
-  } catch (e) {
-    logger.fatal("Failed to mint NFT", e);
+    logger.info({
+      msg: "NFT successfully minted!",
+      txId,
+    });
+  } catch (error) {
+    logger.fatal({
+      msg: "Failed to mint NFT",
+      error,
+    });
     process.exit(1);
   }
 };
