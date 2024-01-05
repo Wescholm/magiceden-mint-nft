@@ -5,7 +5,8 @@ export class CurlImpersonate {
   private readonly proxyString: string;
   private readonly logger = Logger.getInstance(__filename);
 
-  constructor(proxy?: string) {
+  constructor() {
+    const proxy = process.env.PROXY_URL;
     this.proxyString = proxy ? `-x "${proxy}"` : "";
   }
 
