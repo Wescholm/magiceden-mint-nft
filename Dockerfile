@@ -11,7 +11,9 @@ RUN apk add --no-cache curl libstdc++ \
     && node -v && npm -v
 
 COPY package*.json ./
+
 ENV CURL_PROCESS=curl_chrome110
+ENV PROXY_URL=xxx
 
 
 FROM base as development

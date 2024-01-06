@@ -1,6 +1,6 @@
 import * as anchor from "@coral-xyz/anchor";
-import { Keypair, PublicKey, Connection } from "@solana/web3.js";
-import { Magiceden } from "../magiceden";
+import { Keypair, PublicKey, Connection, Transaction } from "@solana/web3.js";
+import { Magiceden } from "../services";
 
 type CollectionDetails = {
   symbol: string;
@@ -69,6 +69,15 @@ type MintixResponse = {
   tx: string;
 };
 
+type AsyncTask<T = Transaction> = () => Promise<T>;
+type SuccessCallback = (response: any, taskId: number) => void;
+type FailureCallback = (error: any, taskId: number) => void;
+
+interface TaskState {
+  id: number;
+  execute: AsyncTask<Transaction>;
+}
+
 export {
   CollectionDetails,
   MintParams,
@@ -76,4 +85,8 @@ export {
   MintixAccounts,
   MintixResponse,
   CandyMachineState,
+  AsyncTask,
+  SuccessCallback,
+  FailureCallback,
+  TaskState,
 };

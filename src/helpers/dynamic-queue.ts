@@ -1,11 +1,9 @@
-type AsyncTask = () => Promise<string>;
-type SuccessCallback = (response: any, taskId: number) => void;
-type FailureCallback = (error: any, taskId: number) => void;
-
-interface TaskState {
-  id: number;
-  execute: AsyncTask;
-}
+import {
+  SuccessCallback,
+  FailureCallback,
+  AsyncTask,
+  TaskState,
+} from "../types";
 
 export class DynamicQueue {
   private onSuccessCallback?: SuccessCallback;

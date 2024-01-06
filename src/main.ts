@@ -1,9 +1,10 @@
-import Mint from "./mint";
-import SolanaWallet from "./solana-wallet";
+import { Transaction } from "@solana/web3.js";
+import { SolanaWallet } from "./services";
 import { Logger, DynamicQueue } from "./helpers";
+import Mint from "./mint";
 
-const MNEMONIC = process.env.MNEMONIC as string;
-const COLLECTION_SYMBOL = process.env.COLLECTION_SYMBOL as string;
+let MNEMONIC = process.env.MNEMONIC as string;
+let COLLECTION_SYMBOL = process.env.COLLECTION_SYMBOL as string;
 const logger = Logger.getInstance(__filename);
 
 if (!MNEMONIC || !COLLECTION_SYMBOL) {
@@ -15,13 +16,33 @@ if (!MNEMONIC || !COLLECTION_SYMBOL) {
   process.exit(1);
 }
 
-const mintNFT = async (mint: Mint): Promise<string> => {
+const getTransactionTask = (mint: Mint) => async () => {
   const transaction = await mint.createTransaction(mint.magiceden);
-  const signedTransaction = mint.signTransaction(transaction);
-  return await mint.sendTransaction(signedTransaction);
+  return mint.signTransaction(transaction);
 };
 
-const main = async () => {
+const getSignedTransaction = async (mint: Mint): Promise<Transaction> => {
+  return new Promise((resolve) => {
+    new DynamicQueue(getTransactionTask(mint))
+      .setConcurrency(1)
+      .onSuccess((signedTransaction, taskId) => {
+        logger.info({
+          msg: `[${taskId}] Get signed transaction succeeded`,
+          signedTransaction,
+        });
+        return resolve(signedTransaction);
+      })
+      .onFailure((_, taskId) => {
+        logger.error({
+          msg: `[${taskId}] Failed to get signed transaction`,
+          taskId,
+        });
+      })
+      .start();
+  });
+};
+
+const mintNFT = async () => {
   const wallet = new SolanaWallet(MNEMONIC);
 
   const mint = await Mint.init({
@@ -29,26 +50,12 @@ const main = async () => {
     symbol: COLLECTION_SYMBOL,
   });
 
-  const mintTask = (m: Mint) => async () => {
-    return await mintNFT(m);
-  };
-
-  const queue = new DynamicQueue(mintTask(mint))
-    .setConcurrency(1)
-    .onSuccess((response, taskId) => {
-      logger.info({
-        msg: `[${taskId}] Task succeeded`,
-        response,
-      });
-      process.exit(0);
-    })
-    .onFailure((_, taskId) => {
-      logger.error({
-        msg: `[${taskId}] Task failed`,
-        taskId,
-      });
-    })
-    .start();
+  const signedTransaction = await getSignedTransaction(mint);
+  const transactionId = await mint.sendTransaction(signedTransaction);
+  logger.info({
+    msg: "Transaction successfully sent!",
+    transactionId,
+  });
 };
 
-main();
+mintNFT();

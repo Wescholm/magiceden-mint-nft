@@ -1,17 +1,17 @@
-import { CurlImpersonate, Logger } from "./helpers";
+import { CurlImpersonate, Logger } from "../helpers";
 import {
   MAGICEDEN_BASE_API_URL,
   MAGICEDEN_MINTIX_URL,
   MAGICEDEN_NOTARY_HOST,
   MAGICEDEN_URL,
-} from "./constants";
+} from "../constants";
 import {
   CollectionDetailsResponse,
   CollectionDetails,
   MintixAccounts,
   MintixParams,
   MintixResponse,
-} from "./types";
+} from "../types";
 
 export class Magiceden {
   public readonly collection: CollectionDetails;

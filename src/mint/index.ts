@@ -13,7 +13,7 @@ import MintAssistant from "./mint-assistant";
 import { Logger } from "../helpers";
 import { TOKEN_METADATA_PROGRAM_ID } from "../constants";
 import { MintixAccounts, MintixParams, MintParams } from "../types";
-import { Magiceden } from "../magiceden";
+import { Magiceden } from "../services";
 
 export default class Mint extends MintAssistant {
   private readonly logger = Logger.getInstance(__filename);
@@ -51,7 +51,11 @@ export default class Mint extends MintAssistant {
       transaction.partialSign(this.mintKeyPair);
       return transaction;
     } catch (e) {
-      this.logger.error("Failed to sign transaction", e);
+      this.logger.error({
+        msg: "Failed to sign transaction",
+        transaction,
+        error: e,
+      });
       throw e;
     }
   }
@@ -65,7 +69,11 @@ export default class Mint extends MintAssistant {
           preflightCommitment: "processed",
         });
       } catch (e) {
-        this.logger.error("Failed to send transaction", e);
+        this.logger.error({
+          msg: "Failed to send transaction",
+          transaction,
+          error: e,
+        });
         throw e;
       }
     } else {

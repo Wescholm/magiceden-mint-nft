@@ -6,10 +6,10 @@ import {
 } from "@solana/web3.js";
 import { mnemonicToSeedSync } from "bip39";
 import { HDKey } from "micro-ed25519-hdkey";
-import { Logger } from "./helpers";
-import { DEFAULT_DERIVATION_PATH } from "./constants";
+import { Logger } from "../helpers";
+import { DEFAULT_DERIVATION_PATH } from "../constants";
 
-export default class SolanaWallet {
+export class SolanaWallet {
   private readonly DERIVATION_PATH: string;
   public readonly keypair: Keypair;
   private readonly connection: Connection;
@@ -43,7 +43,7 @@ export default class SolanaWallet {
       );
 
       this.logger.info({
-        msg: "Recovered keypair from mnemonic",
+        msg: `Recovered keypair from mnemonic ${keypair.publicKey.toString()}`,
         address: keypair.publicKey.toString(),
       });
 

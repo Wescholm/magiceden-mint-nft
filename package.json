@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "scripts": {
     "start:ts": "ts-node src/main.ts",
-    "start:dev": "docker run magiceden-mint-nft:development",
-    "start:prod": "docker run magiceden-mint-nft:production",
+    "start:dev": "docker run -e COLLECTION_SYMBOL=elementals -e MNEMONIC='unable fringe tissue siege sign skull snap switch useless zoo kangaroo general' magiceden-mint-nft:development",
+    "start:prod": "docker run -e COLLECTION_SYMBOL=elementals -e MNEMONIC='unable fringe tissue siege sign skull snap switch useless zoo kangaroo general' magiceden-mint-nft:production",
     "docker:build:dev": "make dev",
     "docker:build:prod": "make prod",
+    "docker:save:dev": "docker save -o magiceden-mint-nft-dev.tar magiceden-mint-nft:development",
+    "docker:save:prod": "docker save -o magiceden-mint-nft-prod.tar magiceden-mint-nft:production",
+    "docker:deploy:dev": "scp magiceden-mint-nft-dev.tar root@209.38.224.248:/root/user",
+    "docker:deploy:prod": "scp magiceden-mint-nft-prod.tar root@209.38.224.248:/root/user",
     "webpack:build:dev": "webpack --mode=development",
     "webpack:build:prod": "webpack --mode=production"
   },
